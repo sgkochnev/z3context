@@ -68,7 +68,6 @@ type result[T any] struct {
 func (s *Service) getOrderByIDWrapper(ctx context.Context, id int64) (*order, error) {
 
 	orderErrChan := make(chan result[*order])
-	defer close(orderErrChan)
 
 	go func(id int64) {
 		o, err := s.getOrderByID(id)
@@ -105,7 +104,7 @@ func main() {
 
 	for i := 0; i < 100; i++ {
 		ctx, cancel := context.WithTimeout(context.Background(), 800*time.Millisecond)
-		result, err := service.getOrderByIDWrapper(ctx, 5)
+		result, err := service.getOrderByIDWrapper(ctx, int64(i))
 
 		fmt.Println(result, err)
 
